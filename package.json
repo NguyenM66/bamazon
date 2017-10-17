@@ -1,0 +1,23 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "App that will take in orders from customers and deplete stock from inventory",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NguyenM66/bamazon.git"
+  },
+  "author": "MonicaNguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NguyenM66/bamazon/issues"
+  },
+  "homepage": "https://github.com/NguyenM66/bamazon#readme",
+  "dependencies": {
+    "inquirer": "^3.3.0",
+    "mysql": "^2.15.0"
+  }
+}
