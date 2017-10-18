@@ -9,13 +9,18 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "@NoCar4U",
+  password: "root",
   database: "bamazon"
 });
 
 connection.connect(function(err) {
   if (err) throw err;
   //console.log("connected as id " + connection.threadId);
+  console.log("------------------------------------------------");
+  console.log("------------------------------------------------");
+  console.log("-------------Welcome to Bamazon!!!--------------")
+  console.log("------------------------------------------------");
+  console.log("------------------------------------------------");
   queryProducts();
   //connection.end();
 });
@@ -36,8 +41,8 @@ function promptCustomer() {
         name: "quantity"
       },
       ]).then(function(inquirerResponse) {
-        console.log("item #: " + inquirerResponse.item);
-        console.log("quantity: " + inquirerResponse.quantity);
+        //console.log("item #: " + inquirerResponse.item);
+        //console.log("quantity: " + inquirerResponse.quantity);
         //return [inquirerResponse.item, inquirerResponse.quantity];
         purchase(inquirerResponse.item, inquirerResponse.quantity);
       })
@@ -53,29 +58,49 @@ function queryProducts() {
     for (var i = 0; i < res.length; i++) {
       console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].price);
     }
-    console.log("-----------------------------------");
+    console.log("------------------------------------------------");
     promptCustomer();
   });
 }
 
 function purchase(item, quantity) {
-  console.log("item ", item);
-  console.log("quantity ", quantity);
+  //console.log("item ", item);
+  //console.log("quantity ", quantity);
   item = parseInt(item);
+
     //query the item user is asking for
     connection.query("SELECT * FROM products WHERE item_id = ?", [item], function(err, res) {
-      
+      var total = Math.max( Math.round(res[0].stock_quantity * res[0].price * 10) / 10, 2.8 ).toFixed(2);
+      var product = res[0].product_name;
       // for (var i = 0; i < res.length; i++) {
       //   console.log(res[i].item_id);
       // }
-      console.log("-----------------------------------");
-      console.log(res);
-      // console.log(res[item].item_id + " | " + res[item].stock_quantity);
-    });
-  //if not
-    //query item quantity
+      console.log("------------------------------------------------");
+      //console.log(res);
+      //console.log(res[0].item_id + " | " + res[0].product_name + " | " + res[0].stock_quantity);
+      var newQuantity = res[0].stock_quantity - quantity;
 
-  //if yes
+      if(res[0].stock_quantity < quantity) {
+        //query item quantity
+        console.log("Insufficient Quantity!! Try a different Quantity");
+        console.log("------------------------------------------------");
+        queryProducts();
+      }else if(res[0].stock_quantity > quantity) {
+        connection.query("UPDATE products SET stock_quantity = ? WHERE item_id =?",[newQuantity,item], function(err, res) {
+        //console.log("updated: ", res);
+        //once update goes through show total cost fo their purchase
+        console.log("***Your total for " + quantity + " " + product + "(s) is $" + total + "***")
+        console.log("                                                ");
+        console.log("                                                ");
+        console.log("------------------------------------------------");
+        console.log("------Would you like to Buy Another Item?-------");
+        console.log("------------------------------------------------");
+        queryProducts();
+        })
+      }
+
+    });
+
 }
 
 
